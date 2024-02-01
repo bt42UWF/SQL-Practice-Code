@@ -1,0 +1,75 @@
+-- Use your database
+USE bt42;
+-- Code here:
+--1. Create a table in your database named Pilot
+CREATE TABLE Pilot (
+    PilotID INT PRIMARY KEY,	-- Add variables: PilotID (primary key), Name, State
+    Name VARCHAR(50),
+    State VARCHAR(50)
+);
+
+-- Populate the table with fake data - at least 5 rows
+INSERT INTO Pilot (PilotID, Name, State) VALUES
+(1, 'John Doe', 'Colorado'),
+(2, 'Jane Smith', 'New York'),
+(3, 'Belanna Torres', 'Florida'),
+(4, 'Steve Jobs', 'California'),
+(5, 'Amelia Earhart', 'Kansas');
+
+-- Select everything from the table
+SELECT * FROM Pilot;
+
+--2. Create a table in your database named Certification
+CREATE TABLE Certification (
+    CertificateID INT PRIMARY KEY,		-- Add variables: CertificateID (Primary), PilotID (foreign key references to Pilot table), Certifcation_Level
+    PilotID INT,
+    Certification_Level INT,
+    FOREIGN KEY (PilotID) REFERENCES Pilot(PilotID)
+);
+
+-- Populate the table with fake data - at least 5 rows. (Consider Certification_Level = 1 for Student Pilot and 2 for Professional Pilot)
+INSERT INTO Certification (CertificateID, PilotID, Certification_Level) VALUES
+(1, 1, 2),
+(2, 2, 1),
+(3, 3, 2),
+(4, 4, 1),
+(5, 5, 2);
+
+-- Select everything from the table
+SELECT * FROM Certification;
+
+
+--Use AdventureWorks database 
+USE AdventureWorks;
+
+--3. Write a query to list the SalesOrderID, SalesOrderDetailID, ProductID, OrderQty from SalesOrderDetail table
+SELECT SalesOrderID, SalesOrderDetailID, ProductID, OrderQty
+FROM Sales.SalesOrderDetail;
+
+
+--4. Write a query to list the SalesOrderID, TerritoryID from SalesOrderHeader table
+SELECT SalesOrderID, TerritoryID
+FROM Sales.SalesOrderHeader;
+
+--5. Write a query to list the name of the Product, ProductID, OrderQty 
+-- and SalesOrderId by joining Product and SalesOrderDetail Tables
+SELECT p.Name AS ProductName, sod.ProductID, sod.OrderQty, sod.SalesOrderID
+FROM Production.Product AS p
+JOIN Sales.SalesOrderDetail AS sod ON p.ProductID = sod.ProductID;
+
+--6. Write a query to list the name of the Product, ProductID, Total OrderQty by ProductID
+-- by joining Product and SalesOrderDetail Tables
+SELECT p.Name AS ProductName, sod.ProductID, SUM(sod.OrderQty) AS TotalOrderQty
+FROM Production.Product AS p
+JOIN Sales.SalesOrderDetail AS sod ON p.ProductID = sod.ProductID
+GROUP BY p.Name, sod.ProductID;
+
+--7. Pick a SalesOrderID from SalesOrderDetail table and find the total OrderQty and Average UnitPrice
+SELECT 
+    TOP 1 SalesOrderID,
+    SUM(OrderQty) AS TotalOrderQty,
+    AVG(UnitPrice) AS AverageUnitPrice
+FROM 
+    Sales.SalesOrderDetail
+GROUP BY 
+    SalesOrderID;
